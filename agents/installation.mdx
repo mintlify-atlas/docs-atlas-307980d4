@@ -1,0 +1,248 @@
+---
+title: Installing the Sher Skill
+description: Enable AI agents to deploy projects with the Sher agent skill
+---
+
+## Quick Install
+
+Install the Sher skill for your AI agent:
+
+```bash
+npx skills add sherdotsh/sher
+```
+
+This command installs the `sher-deploy` skill, which teaches agents how to use the Sher CLI to deploy frontend projects and return live preview URLs.
+
+## What the Skill Does
+
+The Sher skill provides your AI agent with:
+
+- **Knowledge of Sher commands** — how to run `sher link` and when to use deployment flags
+- **Framework detection** — understanding of which frameworks Sher supports
+- **Output parsing** — how to extract preview URLs from CLI output
+- **Error handling** — troubleshooting common deployment issues
+- **Best practices** — when to deploy, how to present URLs to users
+
+## Prerequisites
+
+Before installing the skill, ensure:
+
+<Steps>
+  <Step title="Node.js installed">
+    The skill requires Node.js and npm to be available in the agent's environment
+  </Step>
+  <Step title="Skills CLI available">
+    Your agent framework must support the `skills` ecosystem for skill installation
+  </Step>
+</Steps>
+
+## Installation Steps
+
+<Steps>
+  <Step title="Run the install command">
+    Execute the skill installation command:
+    
+    ```bash
+    npx skills add sherdotsh/sher
+    ```
+    
+    This downloads and registers the Sher deployment skill with your agent.
+  </Step>
+  
+  <Step title="Verify installation">
+    The skill is now available to your agent. No additional configuration is needed.
+  </Step>
+  
+  <Step title="Install Sher CLI (optional)">
+    For better performance, install Sher globally in the agent's environment:
+    
+    ```bash
+    npm i -g shersh
+    ```
+    
+    This allows the agent to use `sher link` directly instead of `npx shersh link`.
+  </Step>
+</Steps>
+
+## How Agents Use the Skill
+
+Once installed, your agent can deploy projects automatically. Here's the typical workflow:
+
+### Example Agent Workflow
+
+```bash
+# Agent scaffolds a new Vite + React project
+npm create vite@latest my-app -- --template react
+cd my-app
+npm install
+
+# Agent deploys the project
+sher link
+
+# Output:
+#   sher — share your work
+#
+#   framework  Vite
+#   building   npm run build
+#
+#   files      12 files (194KB)
+#   uploading  ✓
+#
+#   https://a8xk2m1p.sher.sh  (copied)
+#   expires 3/5/2026, 11:00 AM
+
+# Agent extracts URL and presents to user:
+# "Your app is live at https://a8xk2m1p.sher.sh"
+```
+
+### Deployment Options
+
+The skill teaches agents to use these flags appropriately:
+
+<ParamField path="--dir" type="string">
+  Deploy a specific directory (skips framework detection)
+  
+  ```bash
+  sher link --dir ./dist
+  ```
+</ParamField>
+
+<ParamField path="--ttl" type="number">
+  Set link expiration in hours
+  
+  ```bash
+  sher link --ttl 2
+  ```
+</ParamField>
+
+<ParamField path="--no-build" type="flag">
+  Skip the build step if project is already built
+  
+  ```bash
+  sher link --no-build
+  ```
+</ParamField>
+
+<ParamField path="--pass" type="string">
+  Password-protect the preview (Pro tier only)
+  
+  ```bash
+  sher link --pass mysecret
+  ```
+</ParamField>
+
+## Parsing URLs from Output
+
+The skill teaches agents to extract preview URLs using this pattern:
+
+```regex
+https://[a-z0-9]{8}\.sher\.sh
+```
+
+All Sher preview URLs follow this format: an 8-character alphanumeric subdomain on `sher.sh`.
+
+## Presenting URLs to Users
+
+The skill includes best practices for presenting deployed URLs:
+
+<CodeGroup>
+```text Basic
+Your preview is live at https://a8xk2m1p.sher.sh
+```
+
+```text With Expiry
+Your preview is live at https://a8xk2m1p.sher.sh
+Expires in 2 hours (3/5/2026, 1:00 PM)
+```
+
+```text With Password
+Your preview is live at https://a8xk2m1p.sher.sh
+Password: mysecret
+```
+</CodeGroup>
+
+## Troubleshooting
+
+<AccordionGroup>
+  <Accordion title="Skill installation fails">
+    Ensure Node.js and npm are installed and accessible in the agent's environment. The `skills` CLI requires npm to download and install skill packages.
+  </Accordion>
+  
+  <Accordion title="Agent can't find sher command">
+    Install Sher globally in the agent environment:
+    
+    ```bash
+    npm i -g shersh
+    ```
+    
+    Alternatively, the agent can use `npx shersh link` instead of `sher link`.
+  </Accordion>
+  
+  <Accordion title="Deployment fails with size limit error">
+    The project exceeds the upload size limit:
+    - Anonymous: 10 MB max
+    - Authenticated: 50 MB max
+    - Pro: 100 MB max
+    
+    The agent should optimize build output or suggest authentication for larger projects.
+  </Accordion>
+  
+  <Accordion title="No output directory found">
+    The build didn't produce output in the expected location. The agent should:
+    1. Check that a `build` script exists in `package.json`
+    2. Verify the build completed successfully
+    3. Use `--dir` to specify the output directory explicitly if needed
+  </Accordion>
+</AccordionGroup>
+
+## Configuration
+
+No additional configuration is required after skill installation. The skill is self-contained and works immediately.
+
+### Optional: Authentication
+
+For better rate limits (25 links/day instead of 1), agents can authenticate with GitHub:
+
+```bash
+sher login
+```
+
+Authentication is persistent and survives across agent sessions.
+
+## Supported Frameworks
+
+The skill includes knowledge of all supported frameworks:
+
+<CardGroup cols={2}>
+  <Card title="Vite" icon="bolt">
+    Auto-detects Vite projects and builds to `dist/`
+  </Card>
+  <Card title="Next.js" icon="react">
+    Configures static export automatically, builds to `out/`
+  </Card>
+  <Card title="Astro" icon="rocket">
+    Detects Astro projects and builds to `dist/`
+  </Card>
+  <Card title="Create React App" icon="react">
+    Builds CRA projects to `build/`
+  </Card>
+</CardGroup>
+
+The skill also supports any project with a `build` script that produces `dist/`, `build/`, or `out/` directories.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Link Command" icon="terminal" href="/commands/link">
+    Learn about deployment command options and flags
+  </Card>
+  <Card title="Agent Overview" icon="robot" href="/agents/overview">
+    Understand AI agent integration capabilities
+  </Card>
+  <Card title="List Command" icon="list" href="/commands/list">
+    View and manage active deployments
+  </Card>
+  <Card title="Authentication" icon="key" href="/commands/login">
+    Set up GitHub authentication for better limits
+  </Card>
+</CardGroup>

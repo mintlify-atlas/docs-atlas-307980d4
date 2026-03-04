@@ -1,0 +1,108 @@
+---
+title: AI Agent Integration
+description: Enable AI coding agents to automatically deploy and share preview URLs
+---
+
+## What is AI Agent Integration?
+
+Sher provides native support for AI coding agents, enabling them to automatically deploy projects they build and hand users live preview URLs. Instead of just generating code, agents can now deliver working, shareable applications.
+
+## The Use Case
+
+When AI coding agents build frontend projects for users, there's typically a gap between "here's the code" and "here's what it looks like." Sher bridges that gap:
+
+1. Agent scaffolds or modifies a project
+2. Agent runs `sher link` to deploy it
+3. Agent returns a live URL to the user
+4. User sees the working application immediately
+
+No manual deployment steps. No configuration. No waiting for CI/CD pipelines.
+
+## Benefits
+
+<CardGroup cols={2}>
+  <Card title="Instant Feedback" icon="bolt">
+    Users see working previews in seconds, not minutes or hours
+  </Card>
+  <Card title="No Configuration" icon="sliders">
+    Works out of the box with auto-detected frameworks and build commands
+  </Card>
+  <Card title="Shareable URLs" icon="link">
+    Agents can hand users URLs that work in any browser, no local setup needed
+  </Card>
+  <Card title="Agent-Friendly Design" icon="robot">
+    No interactive prompts, no browser windows, clean stdout output
+  </Card>
+</CardGroup>
+
+## How It Works
+
+Sher is designed to be agent-friendly from the ground up:
+
+- **No interactive prompts** — runs headlessly without user input
+- **No browser launching** — URL goes to stdout, not a browser window
+- **Clean output** — parseable URL format for easy extraction
+- **Zero config** — no accounts or setup required for basic usage
+- **Deterministic exit codes** — 0 on success, non-zero on failure
+
+## Compatible Agents and Tools
+
+The Sher skill is designed to work with any AI coding agent that supports skill installation. The skill has been packaged for agent frameworks that support the `skills` ecosystem.
+
+### Supported Frameworks
+
+The agent skill works with:
+- Vite (React, Vue, Svelte, etc.)
+- Next.js (static export, auto-configured)
+- Astro
+- Create React App
+- Any project with a build script producing `dist/`, `build/`, or `out/`
+
+## Installation
+
+To enable AI agents to use Sher, install the agent skill:
+
+```bash
+npx skills add sherdotsh/sher
+```
+
+This gives your AI agent the ability to run `sher link` and deploy projects automatically.
+
+<Card title="Install the Sher Skill" icon="download" href="/agents/installation">
+  Learn how to set up Sher for your AI agent
+</Card>
+
+## Example Workflow
+
+Here's what a typical agent interaction looks like:
+
+1. **User**: "Build me a React todo app"
+2. **Agent**: Scaffolds project with Vite + React
+3. **Agent**: Runs `sher link` to deploy
+4. **Agent**: "Your todo app is live at https://a8xk2m1p.sher.sh"
+5. **User**: Opens URL and sees working app
+
+The entire process takes seconds, and the user gets a shareable preview URL they can send to teammates or stakeholders.
+
+## Usage Tiers
+
+Sher works without authentication, but agents can use authenticated deployments for better limits:
+
+| Tier | Links/Day | Max Size | Max TTL |
+|------|-----------|----------|--------|
+| Anonymous | 1 | 10 MB | 6 hours |
+| Authenticated | 25 | 50 MB | 24 hours |
+| Pro | 200 | 100 MB | 7 days |
+
+Anonymous usage is perfect for quick demos. For production agent workflows, authentication provides better rate limits.
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/agents/installation">
+    Install the Sher skill for your AI agent
+  </Card>
+  <Card title="Link Command" icon="terminal" href="/commands/link">
+    Learn about the core deployment command
+  </Card>
+</CardGroup>

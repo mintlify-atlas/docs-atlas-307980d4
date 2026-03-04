@@ -1,0 +1,106 @@
+---
+title: 'sher list'
+description: 'View all your active deployments'
+---
+
+The `list` command shows all your currently active preview deployments, including their URLs, expiration times, and password protection status.
+
+<Note>
+  This command requires authentication. Run `sher login` first.
+</Note>
+
+## Usage
+
+```bash
+sher list
+```
+
+Alias:
+
+```bash
+sher ls
+```
+
+## Example Output
+
+### With active deployments
+
+```bash
+sher list
+```
+
+```
+  sher — your deployments
+
+  https://abc123.sher.sh  22h 15m left
+  https://def456.sher.sh  5h 42m left  🔒
+  https://ghi789.sher.sh  1h 8m left
+```
+
+<Tip>
+  The 🔒 icon indicates a password-protected deployment.
+</Tip>
+
+### No active deployments
+
+```bash
+sher list
+```
+
+```
+  sher — your deployments
+
+  No active deployments.
+```
+
+## Understanding the Output
+
+Each deployment shows:
+
+<ParamField path="URL" type="string">
+  The full shareable URL for your deployment
+</ParamField>
+
+<ParamField path="Time remaining" type="string">
+  How long until the link expires, shown in hours and minutes (e.g., "22h 15m left")
+</ParamField>
+
+<ParamField path="Password indicator" type="icon">
+  A 🔒 icon appears if the deployment is password-protected (Pro feature)
+</ParamField>
+
+## Deployment Information
+
+Each deployment includes:
+
+- **URL**: Direct link to your preview
+- **Creation date**: When the deployment was created
+- **Expiration time**: When the link will expire (calculated from TTL)
+- **File count**: Number of files in the deployment
+- **Password status**: Whether the deployment requires a password
+
+## Time Display
+
+Time remaining is displayed as:
+
+- **Hours and minutes** when > 1 hour remaining: `22h 15m left`
+- **Minutes only** when < 1 hour remaining: `42m left`
+- **0m left** when expired (deployment will be removed shortly)
+
+## Authentication Required
+
+If you're not logged in, you'll see:
+
+```
+  Login required. Run `sher login` first.
+```
+
+<Tip>
+  Anonymous deployments (created without login) are not tracked and won't appear in `sher list`. Only authenticated deployments are listed.
+</Tip>
+
+## Related Commands
+
+- [`sher delete`](/commands/delete) - Delete a specific deployment
+- [`sher login`](/commands/login) - Authenticate with GitHub
+- [`sher link`](/commands/link) - Create a new deployment

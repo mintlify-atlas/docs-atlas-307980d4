@@ -1,0 +1,296 @@
+---
+title: CLI Options
+description: Complete reference for Sher's command-line flags and options
+---
+
+Sher's `link` command accepts several flags to customize the build and deployment process.
+
+## Quick Reference
+
+```bash
+sher link                  # Build and share
+sher link --no-build       # Skip build step
+sher link --dir ./my-build # Share a specific directory
+sher link --ttl 4          # Set link expiry in hours
+sher link --pass           # Password-protect (Pro)
+sher link --pass mysecret  # Password-protect with specific password (Pro)
+```
+
+## Build Options
+
+### `--no-build`
+
+Skip the build step and upload an existing output directory.
+
+**Use case:** When you've already built your project or want to share pre-built files.
+
+<CodeGroup>
+```bash Basic usage
+sher link --no-build
+```
+
+```bash With custom directory
+sher link --no-build --dir ./public
+```
+</CodeGroup>
+
+<Tip>
+  This is useful for CI/CD pipelines where the build happens in a separate step.
+</Tip>
+
+---
+
+### `--dir <path>`
+
+Specify a custom output directory to upload.
+
+**Default behavior:** Sher auto-detects the output directory based on your framework:
+- Vite → `dist/`
+- Next.js → `out/`
+- Astro → `dist/`
+- Create React App → `build/`
+
+<CodeGroup>
+```bash Relative path
+sher link --dir ./public
+```
+
+```bash Absolute path
+sher link --dir /home/user/project/output
+```
+
+```bash With --no-build
+sher link --no-build --dir ./static
+```
+</CodeGroup>
+
+<Warning>
+  The directory must exist and contain an `index.html` file (or equivalent entry point) for the preview to work correctly.
+</Warning>
+
+## Link Options
+
+### `--ttl <hours>`
+
+Set the time-to-live (expiry time) for the preview link in hours.
+
+**Default:** 24 hours
+
+**Limits by tier:**
+
+| Tier | Max TTL |
+|------|--------|
+| Free (anonymous) | 6 hours |
+| Starter (GitHub login) | 24 hours |
+| Pro ($8/mo) | 168 hours (7 days) |
+
+<CodeGroup>
+```bash 4-hour link
+sher link --ttl 4
+```
+
+```bash Maximum for Pro tier
+sher link --ttl 168
+```
+
+```bash Combined with other flags
+sher link --ttl 12 --pass
+```
+</CodeGroup>
+
+<Info>
+  The TTL value is automatically clamped to the maximum allowed for your tier. If you specify a value higher than your tier's limit, it will be reduced to the maximum.
+</Info>
+
+---
+
+### `--pass [password]` <Badge text="Pro" variant="success" />
+
+Password-protect the preview link.
+
+**Behavior:**
+- **Without a value:** Generates a random 8-character password
+- **With a value:** Uses the specified password
+
+<CodeGroup>
+```bash Random password
+sher link --pass
+```
+
+```bash Custom password
+sher link --pass mysecretkey
+```
+
+```bash With spaces (must quote)
+sher link --pass "my secret phrase"
+```
+</CodeGroup>
+
+**Example output:**
+
+```bash
+$ sher link --pass
+
+  sher — share your work
+
+  framework  Vite
+  building   npm run build
+
+  files      12 files (194KB)
+
+  https://a8xk2m1p.sher.sh  (copied)
+  password   f7a3c9e1
+  expires 2/19/2026, 11:00 AM
+```
+
+<Warning>
+  Password protection is only available on the Pro tier. You'll get an error if you try to use this flag without a Pro subscription.
+</Warning>
+
+#### Random Password Generation
+
+When you use `--pass` without a value, Sher generates a cryptographically secure 8-character hexadecimal password (e.g., `f7a3c9e1`).
+
+Implementation from `src/index.ts:186-190`:
+
+```ts
+let password: string | undefined;
+if (flags.pass) {
+  password =
+    typeof flags.pass === "string"
+      ? flags.pass
+      : randomBytes(4).toString("hex"); // 8-char random
+}
+```
+
+## General Options
+
+### `--help` or `-h`
+
+Display help information.
+
+```bash
+sher --help
+```
+
+---
+
+### `--version` or `-v`
+
+Show the installed version of Sher.
+
+```bash
+sher --version
+```
+
+## Combining Options
+
+You can combine multiple flags to customize your deployment:
+
+<CodeGroup>
+```bash Custom directory with TTL
+sher link --dir ./output --ttl 12
+```
+
+```bash Skip build and password-protect
+sher link --no-build --pass secretkey
+```
+
+```bash Maximum customization
+sher link --dir ./static --ttl 168 --pass --no-build
+```
+</CodeGroup>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Use --ttl wisely">
+    Set shorter TTLs for temporary shares:
+
+    ```bash
+    # Quick demo (2 hours)
+    sher link --ttl 2
+
+    # Client review (24 hours)
+    sher link --ttl 24
+
+    # Long-term staging (Pro only)
+    sher link --ttl 168
+    ```
+  </Accordion>
+
+  <Accordion title="Password-protect sensitive work">
+    Always use `--pass` for private client work or internal previews:
+
+    ```bash
+    # Random password (share via secure channel)
+    sher link --pass
+
+    # Pre-shared password
+    sher link --pass "client-demo-2024"
+    ```
+  </Accordion>
+
+  <Accordion title="Use --dir for monorepos">
+    In monorepos, specify the exact output directory:
+
+    ```bash
+    # Frontend in a monorepo
+    sher link --dir ./apps/web/dist
+
+    # Specific package
+    sher link --dir ./packages/ui/build
+    ```
+  </Accordion>
+
+  <Accordion title="Skip builds in CI/CD">
+    When deploying from CI, build first and use `--no-build`:
+
+    ```yaml
+    - name: Build
+      run: npm run build
+
+    - name: Deploy preview
+      run: sher link --no-build
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Error Handling
+
+### Rate Limits
+
+If you exceed your tier's daily limit, Sher will show an error before building:
+
+```bash
+Rate limit reached (1/day). Run `sher login` for up to 25/day.
+```
+
+**Solutions:**
+- Free tier: Run `sher login` to upgrade to Starter (25/day)
+- Starter tier: Run `sher upgrade` for Pro (200/day)
+
+### Upload Size Limits
+
+If your build output exceeds the maximum upload size:
+
+```bash
+Error: Build output is 55.2MB (max 50MB)
+```
+
+**Solutions:**
+- Remove unused assets from your build
+- Optimize images and other media files
+- Use `--dir` to upload only necessary files
+- Upgrade to Pro for 100MB limit
+
+### Invalid TTL
+
+TTL values are automatically clamped between 1 and 168 hours. Invalid values are corrected:
+
+```ts
+// From src/index.ts:192-194
+const ttlVal =
+  typeof flags.ttl === "string" ? parseInt(flags.ttl, 10) : DEFAULT_TTL;
+const ttl = Math.min(Math.max(ttlVal || DEFAULT_TTL, 1), 168);
+```

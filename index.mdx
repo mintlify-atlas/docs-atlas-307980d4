@@ -1,97 +1,191 @@
 ---
-title: "Introduction"
-description: "Welcome to the new home for your documentation"
+title: Sher Documentation
+description: Share frontend project previews via ephemeral URLs with a simple CLI command
+mode: custom
 ---
 
-## Setting up
+<div className="relative py-20 overflow-hidden dark:bg-[#05060a] bg-gray-50">
+  <div className="absolute inset-0 bg-gradient-to-br from-[#f97316]/10 via-transparent to-transparent dark:from-[#f97316]/5"></div>
+  <div className="max-w-6xl mx-auto px-6 relative z-10">
+    <div className="grid lg:grid-cols-12 gap-12 items-center">
+      <div className="lg:col-span-7">
+        <h1 className="text-5xl md:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+          Instant preview links for your projects
+        </h1>
+        <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8 max-w-2xl">
+          Stop pushing commits just to see a preview. Sher builds your frontend project and gives you a live URL in seconds. Works with Vite, Next.js, Astro, and more.
+        </p>
+        <div className="flex flex-wrap gap-4">
+          <a 
+            href="/quickstart" 
+            className="inline-flex items-center px-6 py-3 rounded-lg bg-[#848484] hover:bg-[#6f6f6f] text-white font-semibold transition-colors no-underline"
+          >
+            Get Started
+          </a>
+          <a 
+            href="/commands/link" 
+            className="inline-flex items-center px-6 py-3 rounded-lg border border-gray-300 dark:border-white/30 bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 text-gray-900 dark:text-white font-semibold transition-colors no-underline"
+          >
+            Explore Commands
+          </a>
+        </div>
+      </div>
+      <div className="lg:col-span-5">
+        <div className="dark:bg-[#141417] bg-white rounded-xl border border-gray-200 dark:border-white/10 p-6 shadow-xl dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+          <div className="flex items-center gap-2 mb-4">
+            <div className="flex gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+            </div>
+          </div>
+          <pre className="text-sm text-gray-800 dark:text-gray-200 font-mono overflow-x-auto">
+{`$ sher link
 
-Get your documentation site up and running in minutes.
+  sher — share your work
 
-<Card
-  title="Start here"
-  icon="rocket"
-  href="/quickstart"
-  horizontal
->
-  Follow our three step quickstart guide.
-</Card>
+  framework  Vite
+  building   npm run build
 
-## Make it yours
+  files      12 files (194KB)
+  uploading  ✓
 
-Design a docs site that looks great and empowers your users.
+  https://a8xk2m1p.sher.sh  (copied)
+  expires 2/19/2026, 11:00 AM`}
+          </pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-<Columns cols={2}>
-  <Card
-    title="Edit locally"
-    icon="pen-to-square"
-    href="/development"
-  >
-    Edit your docs locally and preview them in real time.
-  </Card>
-  <Card
-    title="Customize your site"
-    icon="palette"
-    href="/essentials/settings"
-  >
-    Customize the design and colors of your site to match your brand.
-  </Card>
-    <Card
-    title="Set up navigation"
-    icon="map"
-    href="/essentials/navigation"
-  >
-    Organize your docs to help users find what they need and succeed with your product.
-  </Card>
-  <Card
-    title="API documentation"
-    icon="terminal"
-    href="/api-reference/introduction"
-  >
-    Auto-generate API documentation from OpenAPI specifications.
-  </Card>
-</Columns>
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Quick Start</h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">Get up and running with Sher in three simple steps</p>
 
-## Create beautiful pages
+  <Steps>
+    <Step title="Install Sher globally">
+      Install the Sher CLI using your preferred package manager:
 
-Everything you need to create world-class documentation.
+      <CodeGroup>
+      ```bash npm
+      npm install -g shersh
+      ```
 
-<Columns cols={2}>
-  <Card
-    title="Write with MDX"
-    icon="pen-fancy"
-    href="/essentials/markdown"
-  >
-    Use MDX to style your docs pages.
-  </Card>
-  <Card
-    title="Code samples"
-    icon="code"
-    href="/essentials/code"
-  >
-    Add sample code to demonstrate how to use your product.
-  </Card>
-  <Card
-    title="Images"
-    icon="image"
-    href="/essentials/images"
-  >
-    Display images and other media.
-  </Card>
-  <Card
-    title="Reusable snippets"
-    icon="recycle"
-    href="/essentials/reusable-snippets"
-  >
-    Write once and reuse across your docs.
-  </Card>
-</Columns>
+      ```bash yarn
+      yarn global add shersh
+      ```
 
-## Need inspiration?
+      ```bash pnpm
+      pnpm add -g shersh
+      ```
 
-<Card
-  title="See complete examples"
-  icon="stars"
-  href="https://mintlify.com/customers"
->
-  Browse our showcase of exceptional documentation sites.
-</Card>
+      ```bash bun
+      bun add -g shersh
+      ```
+      </CodeGroup>
+    </Step>
+
+    <Step title="Navigate to your project">
+      Open your terminal and navigate to any frontend project directory:
+
+      ```bash
+      cd my-vite-app
+      ```
+
+      Sher automatically detects your framework (Vite, Next.js, Astro, Create React App) and package manager.
+    </Step>
+
+    <Step title="Share your project">
+      Run the link command to build and deploy:
+
+      ```bash
+      sher link
+      ```
+
+      Sher will build your project, upload it, and copy a live preview URL to your clipboard. The link expires in 24 hours by default (configurable with `--ttl`).
+
+      <Tip>Run `sher login` to unlock higher limits: 25 links per day and 50MB uploads for free with GitHub authentication.</Tip>
+    </Step>
+  </Steps>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Explore by Topic</h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">Dive deeper into Sher's features and capabilities</p>
+
+  <CardGroup cols={2}>
+    <Card title="Commands" icon="terminal" href="/commands/link">
+      Learn about all available Sher commands including link, list, delete, and authentication
+    </Card>
+    <Card title="Framework Support" icon="box" href="/guides/frameworks">
+      Discover how Sher auto-detects and builds projects for Vite, Next.js, Astro, and more
+    </Card>
+    <Card title="Options & Configuration" icon="sliders" href="/guides/options">
+      Customize your deployments with flags like --no-build, --dir, --ttl, and --pass
+    </Card>
+    <Card title="Pricing Tiers" icon="dollar-sign" href="/guides/pricing">
+      Compare Free, Starter, and Pro plans with different limits and features
+    </Card>
+    <Card title="Self-Hosting" icon="server" href="/guides/self-hosting">
+      Deploy your own Sher instance on Cloudflare Workers and R2
+    </Card>
+    <Card title="AI Agent Integration" icon="robot" href="/agents/overview">
+      Enable AI coding agents to automatically deploy and share preview links
+    </Card>
+  </CardGroup>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Key Features</h2>
+  <p className="text-base text-gray-600 dark:text-gray-400 mb-8">What makes Sher the fastest way to share your work</p>
+
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div className="dark:bg-[#141417] bg-white rounded-lg border border-gray-200 dark:border-white/10 p-6 dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+      <div className="text-2xl mb-3">⚡</div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">No Git Required</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Share work-in-progress without pushing commits or setting up CI/CD. Perfect for quick demos and feedback loops.
+      </p>
+    </div>
+
+    <div className="dark:bg-[#141417] bg-white rounded-lg border border-gray-200 dark:border-white/10 p-6 dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+      <div className="text-2xl mb-3">🔍</div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Auto-Detection</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Automatically detects your framework (Vite, Next.js, Astro, CRA) and package manager (npm, yarn, pnpm, bun).
+      </p>
+    </div>
+
+    <div className="dark:bg-[#141417] bg-white rounded-lg border border-gray-200 dark:border-white/10 p-6 dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+      <div className="text-2xl mb-3">🔒</div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Password Protection</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Protect your preview links with passwords (Pro tier). Generate random passwords or set your own.
+      </p>
+    </div>
+
+    <div className="dark:bg-[#141417] bg-white rounded-lg border border-gray-200 dark:border-white/10 p-6 dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+      <div className="text-2xl mb-3">🤖</div>
+      <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">AI Agent Ready</h3>
+      <p className="text-sm text-gray-600 dark:text-gray-400">
+        Integrates with AI coding agents so they can deploy what they build and hand you a live URL automatically.
+      </p>
+    </div>
+  </div>
+</div>
+
+<div className="mt-16 mb-16 max-w-5xl mx-auto px-6">
+  <div className="dark:bg-[#141417] bg-white rounded-2xl border border-gray-200 dark:border-white/10 p-8 text-center dark:shadow-[0_0_40px_rgba(255,255,255,0.05)]">
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">Ready to share your work?</h2>
+    <p className="text-base text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+      Install Sher and get your first preview link in under a minute. No account required to start.
+    </p>
+    <a 
+      href="/installation" 
+      className="inline-flex items-center px-6 py-3 rounded-lg bg-[#848484] hover:bg-[#6f6f6f] text-white font-semibold transition-colors no-underline"
+    >
+      Install Sher
+    </a>
+  </div>
+</div>

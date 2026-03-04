@@ -1,0 +1,159 @@
+---
+title: 'sher whoami'
+description: 'Show current login status and subscription tier'
+---
+
+The `whoami` command displays your current authentication status and subscription tier.
+
+## Usage
+
+```bash
+sher whoami
+```
+
+## Example Output
+
+### Starter (Free) tier
+
+```bash
+sher whoami
+```
+
+```
+  Logged in as octocat
+  tier       Starter (free)
+  tip        run `sher upgrade` for Pro ($8/mo)
+```
+
+### Pro tier
+
+```bash
+sher whoami
+```
+
+```
+  Logged in as octocat
+  tier       Pro
+```
+
+### Not logged in
+
+```bash
+sher whoami
+```
+
+```
+  Not logged in. Run `sher login` to authenticate.
+```
+
+## What Information Is Shown
+
+<ParamField path="Username" type="string">
+  Your GitHub username that you authenticated with
+</ParamField>
+
+<ParamField path="Tier" type="string">
+  Your current subscription tier:
+  - **Starter (free)**: Free tier with basic limits
+  - **Pro**: Paid tier with higher limits and extra features
+</ParamField>
+
+<ParamField path="Upgrade tip" type="string">
+  If you're on the free tier, a helpful reminder about upgrading to Pro
+</ParamField>
+
+## Subscription Tiers
+
+### Starter (Free)
+
+Free tier available after running `sher login`:
+
+- 25 links per day
+- 50MB max upload size
+- 24-hour max TTL
+- List and delete deployments
+
+### Pro
+
+Paid tier at $8/month via `sher upgrade`:
+
+- 200 links per day
+- 100MB max upload size
+- 168-hour (7-day) max TTL
+- Password protection
+- All Starter features
+
+<Tip>
+  Run `sher upgrade` to subscribe to Pro and unlock higher limits.
+</Tip>
+
+## Use Cases
+
+### Check authentication
+
+Verify you're logged in before using authenticated commands:
+
+```bash
+sher whoami
+sher list
+```
+
+### Confirm tier after upgrade
+
+After upgrading to Pro, confirm your subscription:
+
+```bash
+sher upgrade
+# Complete checkout in browser
+sher whoami
+```
+
+### Troubleshoot limits
+
+If you're hitting rate limits, check your tier:
+
+```bash
+sher whoami
+```
+
+```
+  Logged in as octocat
+  tier       Starter (free)
+  tip        run `sher upgrade` for Pro ($8/mo)
+```
+
+## Offline Behavior
+
+If the API server is unreachable, `whoami` will still show your username:
+
+```bash
+sher whoami
+```
+
+```
+  Logged in as octocat
+```
+
+But tier information won't be displayed (since it requires an API call).
+
+## Authentication Storage
+
+Your authentication is stored locally in:
+
+```
+~/.sher/auth.json
+```
+
+This file contains:
+- Your authentication token
+- Your GitHub username
+
+<Warning>
+  Keep your auth token secure. Don't commit it to version control or share it publicly.
+</Warning>
+
+## Related Commands
+
+- [`sher login`](/commands/login) - Authenticate with GitHub
+- [`sher logout`](/commands/logout) - Remove stored credentials
+- [`sher upgrade`](/commands/upgrade) - Upgrade to Pro

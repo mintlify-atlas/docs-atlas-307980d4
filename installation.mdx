@@ -1,0 +1,170 @@
+---
+title: "Installation"
+description: "Install the Sher CLI globally or locally in your project"
+---
+
+## Requirements
+
+Before installing Sher, make sure you have Node.js installed:
+
+- **Node.js** 16.x or higher (18.x or 20.x recommended)
+
+<Note>
+Sher works with any package manager: npm, yarn, pnpm, or bun. The CLI will automatically detect which one your project uses.
+</Note>
+
+## Global Installation
+
+Install Sher globally to use it across all your projects:
+
+<CodeGroup>
+
+```bash npm
+npm install -g shersh
+```
+
+```bash yarn
+yarn global add shersh
+```
+
+```bash pnpm
+pnpm add -g shersh
+```
+
+```bash bun
+bun add -g shersh
+```
+
+</CodeGroup>
+
+<Tip>
+Global installation is recommended. You can run `sher link` from any project directory without installing it locally.
+</Tip>
+
+## Local Installation
+
+Alternatively, install Sher as a dev dependency in a specific project:
+
+<CodeGroup>
+
+```bash npm
+npm install --save-dev shersh
+```
+
+```bash yarn
+yarn add --dev shersh
+```
+
+```bash pnpm
+pnpm add -D shersh
+```
+
+```bash bun
+bun add -d shersh
+```
+
+</CodeGroup>
+
+Then use it via npm scripts or npx:
+
+```json package.json
+{
+  "scripts": {
+    "share": "sher link"
+  }
+}
+```
+
+```bash
+npm run share
+# or
+npx sher link
+```
+
+## Verify Installation
+
+Check that Sher is installed correctly by running:
+
+```bash
+sher --version
+```
+
+You should see the current version number (e.g., `0.4.9`).
+
+<Note>
+If the command is not found, make sure your global npm/yarn/pnpm bin directory is in your PATH. Run `npm config get prefix` to find the location.
+</Note>
+
+## Update Sher
+
+To update Sher to the latest version:
+
+<CodeGroup>
+
+```bash npm
+npm update -g shersh
+```
+
+```bash yarn
+yarn global upgrade shersh
+```
+
+```bash pnpm
+pnpm update -g shersh
+```
+
+```bash bun
+bun update -g shersh
+```
+
+</CodeGroup>
+
+## Uninstall
+
+To remove Sher from your system:
+
+<CodeGroup>
+
+```bash npm
+npm uninstall -g shersh
+```
+
+```bash yarn
+yarn global remove shersh
+```
+
+```bash pnpm
+pnpm remove -g shersh
+```
+
+```bash bun
+bun remove -g shersh
+```
+
+</CodeGroup>
+
+<Warning>
+Uninstalling will not delete your active deployments. They will continue to be accessible until they expire.
+</Warning>
+
+## Supported Frameworks
+
+Sher automatically detects and supports:
+
+- **Vite** (React, Vue, Svelte, Solid, etc.)
+- **Next.js** (static export, auto-configured)
+- **Astro**
+- **Create React App**
+- **Custom projects** with a `build` script and `dist/`, `build/`, or `out/` directory
+
+<Tip>
+For Next.js projects, Sher automatically injects `output: "export"` into your `next.config.js` during the build. The original config is restored after the upload.
+</Tip>
+
+## Next Steps
+
+Now that Sher is installed, learn how to use it:
+
+<Card title="Quickstart Guide" icon="rocket" href="/quickstart">
+  Deploy your first project in under 60 seconds
+</Card>

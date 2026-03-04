@@ -1,0 +1,199 @@
+---
+title: 'sher link'
+description: 'Build and share your project with a public preview link'
+---
+
+The `link` command is the primary way to share your project. It detects your framework, builds your project (or skips the build if you prefer), and uploads the output to generate a shareable preview link.
+
+## Basic Usage
+
+```bash
+sher link
+```
+
+This will:
+1. Detect your framework (Next.js, Vite, etc.)
+2. Run your build command
+3. Upload the build output
+4. Generate a shareable URL (copied to clipboard)
+5. Set a 24-hour expiration by default
+
+<Note>
+  Anonymous users can create up to 5 links per day. Run `sher login` for 25 links/day.
+</Note>
+
+## Flags
+
+<ParamField path="--no-build" type="boolean">
+  Skip the build step and upload a pre-built directory. Useful when you've already run the build manually or want to share an existing build output.
+  
+  ```bash
+  sher link --no-build
+  ```
+</ParamField>
+
+<ParamField path="--dir" type="string">
+  Specify a custom directory to upload instead of using the framework's default output directory.
+  
+  ```bash
+  sher link --dir dist
+  sher link --dir build
+  sher link --dir out
+  ```
+</ParamField>
+
+<ParamField path="--ttl" type="number">
+  Set the link expiration time in hours. Default is 24 hours. Maximum is 168 hours (7 days) for Pro users.
+  
+  ```bash
+  sher link --ttl 4    # Expires in 4 hours
+  sher link --ttl 48   # Expires in 2 days (Pro)
+  sher link --ttl 168  # Expires in 7 days (Pro)
+  ```
+  
+  <Note>
+    Free users: TTL can be set but all links expire within 24 hours max.
+    Pro users: Can set TTL up to 168 hours (7 days).
+  </Note>
+</ParamField>
+
+<ParamField path="--pass" type="string | boolean">
+  Password-protect your preview link. **Pro only feature.**
+  
+  ```bash
+  # Generate a random 8-character password
+  sher link --pass
+  
+  # Use a specific password
+  sher link --pass mySecretKey123
+  ```
+  
+  <Warning>
+    Password protection requires a Pro subscription. Upgrade with `sher upgrade`.
+  </Warning>
+</ParamField>
+
+## Examples
+
+### Share a Next.js project
+
+```bash
+sher link
+```
+
+```
+  sher — share your work
+
+  framework  Next.js
+  building   npm run build
+
+  files      42 files (1.2MB)
+
+  https://abc123.sher.sh  (copied)
+  expires 3/5/2026, 2:30:00 PM
+```
+
+### Skip the build step
+
+```bash
+npm run build
+sher link --no-build
+```
+
+```
+  sher — share your work
+
+  framework  Next.js
+  files      42 files (1.2MB)
+
+  https://abc123.sher.sh  (copied)
+  expires 3/5/2026, 2:30:00 PM
+```
+
+### Share a custom directory
+
+```bash
+sher link --dir public
+```
+
+### Create a short-lived link
+
+```bash
+sher link --ttl 2
+```
+
+```
+  https://abc123.sher.sh  (copied)
+  expires 3/4/2026, 4:30:00 PM
+```
+
+### Password-protected link (Pro)
+
+```bash
+sher link --pass
+```
+
+```
+  https://abc123.sher.sh  (copied)
+  password   a1b2c3d4
+  expires 3/5/2026, 2:30:00 PM
+```
+
+## Framework Detection
+
+Sher automatically detects your framework and uses the correct build command and output directory:
+
+- **Next.js**: `npm run build` → `out/` (with automatic static export configuration)
+- **Vite**: `npm run build` → `dist/`
+- **Create React App**: `npm run build` → `build/`
+- **Astro**: `npm run build` → `dist/`
+- **SvelteKit**: `npm run build` → `build/`
+- **Static HTML**: No build → current directory
+
+<Tip>
+  For Next.js projects, Sher automatically configures static export by injecting `output: "export"` into your `next.config.js` during the build, then restores it afterwards.
+</Tip>
+
+## Rate Limits & Upload Limits
+
+| Tier | Links/Day | Max Upload Size |
+|------|-----------|----------------|
+| Anonymous | 5 | 50MB |
+| Starter (Free) | 25 | 50MB |
+| Pro | 200 | 100MB |
+
+If you hit a rate limit, you'll see:
+
+```
+  Rate limit reached (5/day). Run `sher login` for up to 25/day.
+```
+
+## Error Handling
+
+### Upload too large
+
+```
+  Error: Build output is 55.2MB (max 50MB)
+```
+
+<Tip>
+  Reduce your bundle size or upgrade to Pro for 100MB uploads.
+</Tip>
+
+### Build fails
+
+If your build command fails, Sher will exit and show the build error. Fix the error and try again.
+
+### Missing output directory
+
+If you use `--no-build` or `--dir` and the directory doesn't exist, you'll see:
+
+```
+  Error: Directory not found: dist
+```
+
+## Related
+
+- [Supported Frameworks](/guides/frameworks)
+- [Link Options & Configuration](/guides/options)
+- [Upgrade to Pro](/commands/upgrade)

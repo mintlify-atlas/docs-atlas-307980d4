@@ -1,0 +1,209 @@
+---
+title: 'sher upgrade'
+description: 'Upgrade to Pro for higher limits and advanced features'
+---
+
+The `upgrade` command opens a Polar checkout session to subscribe to Sher Pro at $8/month.
+
+<Note>
+  This command requires authentication. Run `sher login` first.
+</Note>
+
+## Usage
+
+```bash
+sher upgrade
+```
+
+## What Happens
+
+1. Sher creates a checkout session with Polar (payment processor)
+2. Your browser opens to the checkout page
+3. You complete payment
+4. Your account is upgraded to Pro
+5. Higher limits take effect immediately
+
+## Example Flow
+
+```bash
+sher upgrade
+```
+
+```
+  sher — upgrade to Pro
+
+  Creating checkout session...
+
+  Opening Polar checkout in your browser...
+  If it didn't open, visit:
+
+  https://polar.sh/checkout/abc123xyz
+```
+
+Your browser will open to the Polar checkout page where you can:
+- Enter payment details
+- Review subscription terms
+- Complete the upgrade
+
+## Pro Benefits
+
+Upgrading to Pro unlocks:
+
+<ParamField path="Links per day" type="number">
+  **200 links/day** (vs 25 on free tier)
+  
+  Create more preview links for larger teams or frequent deployments.
+</ParamField>
+
+<ParamField path="Max upload size" type="number">
+  **100MB** (vs 50MB on free tier)
+  
+  Upload larger projects with more assets, images, and dependencies.
+</ParamField>
+
+<ParamField path="Max TTL" type="number">
+  **168 hours (7 days)** (vs 24 hours on free tier)
+  
+  Keep preview links active for an entire week.
+  
+  ```bash
+  sher link --ttl 168  # 7-day link
+  ```
+</ParamField>
+
+<ParamField path="Password protection" type="boolean">
+  **Enabled** (not available on free tier)
+  
+  Protect your previews with passwords.
+  
+  ```bash
+  sher link --pass
+  sher link --pass mySecretKey
+  ```
+</ParamField>
+
+## Pricing
+
+| Plan | Price | Links/Day | Upload Size | Max TTL | Password |
+|------|-------|-----------|-------------|---------|----------|
+| Starter (Free) | $0 | 25 | 50MB | 24h | ❌ |
+| Pro | $8/mo | 200 | 100MB | 168h | ✅ |
+
+<Tip>
+  Pro is billed monthly through Polar. Cancel anytime.
+</Tip>
+
+## Not Logged In
+
+If you try to upgrade without authenticating:
+
+```bash
+sher upgrade
+```
+
+```
+  Login required. Run `sher login` first.
+```
+
+## Browser Not Opening?
+
+If your browser doesn't open automatically, copy the URL shown in the terminal:
+
+```
+  Opening Polar checkout in your browser...
+  If it didn't open, visit:
+
+  https://polar.sh/checkout/abc123xyz
+```
+
+## After Upgrading
+
+Once you've completed payment:
+
+1. Close the browser tab
+2. Verify your tier with `sher whoami`:
+
+```bash
+sher whoami
+```
+
+```
+  Logged in as octocat
+  tier       Pro
+```
+
+3. Start using Pro features:
+
+```bash
+# Longer TTL
+sher link --ttl 168
+
+# Password protection
+sher link --pass
+
+# Larger uploads (up to 100MB)
+sher link
+```
+
+## Managing Your Subscription
+
+To manage your Pro subscription:
+
+1. Visit [Polar](https://polar.sh)
+2. Log in with your GitHub account
+3. Manage billing, update payment method, or cancel subscription
+
+## Canceling Pro
+
+If you cancel your Pro subscription:
+- You'll retain Pro access until the end of your billing period
+- After that, you'll be downgraded to Starter (Free)
+- Existing deployments remain active until they expire
+- You can re-subscribe anytime
+
+## Use Cases
+
+### Frequent deployments
+
+If you're hitting the 25 links/day limit:
+
+```bash
+sher whoami  # Check current tier
+sher upgrade  # Upgrade to 200/day
+```
+
+### Large projects
+
+If your build output exceeds 50MB:
+
+```bash
+sher link
+# Error: Build output is 55.2MB (max 50MB)
+
+sher upgrade  # Unlock 100MB uploads
+sher link  # Now works
+```
+
+### Long-lived previews
+
+Share previews that need to last more than 24 hours:
+
+```bash
+sher upgrade
+sher link --ttl 168  # 7-day link
+```
+
+### Private previews
+
+Password-protect sensitive work:
+
+```bash
+sher upgrade
+sher link --pass clientPassword123
+```
+
+## Related
+
+- [Pricing Details](/guides/pricing)
+- [`sher whoami`](/commands/whoami) - Check your current tier
+- [`sher link --pass`](/commands/link) - Use password protection

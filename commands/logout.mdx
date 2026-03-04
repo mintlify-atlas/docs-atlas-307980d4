@@ -1,0 +1,126 @@
+---
+title: 'sher logout'
+description: 'Remove stored credentials and log out'
+---
+
+The `logout` command removes your stored authentication credentials and logs you out of Sher.
+
+## Usage
+
+```bash
+sher logout
+```
+
+## What Happens
+
+When you run `sher logout`:
+
+1. Your auth token is removed from `~/.sher/auth.json`
+2. You're logged out locally
+3. Future `sher link` commands will run as anonymous (5 links/day limit)
+4. You can no longer use `sher list` or `sher delete`
+
+<Note>
+  Logging out does NOT delete your existing deployments. They will continue to be accessible until they expire.
+</Note>
+
+## Example
+
+```bash
+sher logout
+```
+
+```
+  Logged out. Was logged in as octocat.
+```
+
+## When Not Logged In
+
+If you're not currently logged in:
+
+```bash
+sher logout
+```
+
+```
+  Not logged in.
+```
+
+## What Gets Removed
+
+- **Authentication token**: Deleted from `~/.sher/auth.json`
+- **Local credentials**: All stored auth data is removed
+
+## What Stays
+
+- **Existing deployments**: Your deployed links remain active until they expire
+- **GitHub authorization**: The OAuth connection remains in your GitHub settings (you can manually revoke it)
+
+## Effects of Logging Out
+
+After logging out, you'll be downgraded to **Anonymous** tier:
+
+| Feature | Anonymous | Starter (Free) |
+|---------|-----------|----------------|
+| Links per day | 5 | 25 |
+| Max upload size | 50MB | 50MB |
+| Max TTL | 24 hours | 24 hours |
+| List deployments | ❌ | ✅ |
+| Delete deployments | ❌ | ✅ |
+
+## Use Cases
+
+### Switch accounts
+
+```bash
+sher logout
+sher login
+```
+
+### Revoke access
+
+If you want to stop using Sher or remove access:
+
+```bash
+sher logout
+```
+
+Then manually revoke the OAuth app in your [GitHub settings](https://github.com/settings/applications).
+
+### Troubleshoot authentication
+
+If you're having auth issues:
+
+```bash
+sher logout
+sher login
+```
+
+## Re-authenticating
+
+To log back in after logging out:
+
+```bash
+sher login
+```
+
+<Tip>
+  Your deployments are tied to your account, not your local session. Logging out and back in won't affect your existing links.
+</Tip>
+
+## Security
+
+Logging out:
+- Removes the token from your local machine
+- Does NOT revoke the OAuth token on GitHub's side
+- Does NOT delete your deployments
+
+To fully revoke access:
+1. Run `sher logout`
+2. Visit [GitHub Settings → Applications](https://github.com/settings/applications)
+3. Find "Sher" and click "Revoke"
+
+## Related Commands
+
+- [`sher login`](/commands/login) - Authenticate with GitHub
+- [`sher whoami`](/commands/whoami) - Check current login status

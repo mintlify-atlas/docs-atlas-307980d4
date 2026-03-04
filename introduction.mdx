@@ -1,0 +1,148 @@
+---
+title: "Introduction to Sher"
+description: "Instant preview links for your frontend projects without Git commits or CI/CD pipelines"
+---
+
+## What is Sher?
+
+Sher is a CLI tool that builds your frontend project and gives you a live preview URL in seconds. Instead of pushing to a branch and waiting for CI/CD or setting up a Vercel project, you can share your work instantly with a single command.
+
+```bash
+sher link
+```
+
+That's it. Sher builds your project, uploads it, and returns a shareable URL that expires after 24 hours by default.
+
+## The Problem Sher Solves
+
+Sharing work in progress is harder than it should be:
+
+- **Git commits for every demo** - You don't want to commit half-finished work just to show someone
+- **Complex CI/CD setup** - Preview deployments require branch protection, webhooks, and configuration
+- **Slow feedback loops** - Waiting for builds to run before sharing a link wastes time
+- **Overhead for quick tests** - Sometimes you just want to see if something works on mobile or share a quick prototype
+
+Sher removes all of this friction. Build locally, get a link, share it.
+
+## Key Features
+
+<CardGroup cols={2}>
+  <Card title="Framework Auto-Detection" icon="wand-magic-sparkles">
+    Automatically detects Vite, Next.js, Astro, Create React App, and custom build setups
+  </Card>
+  
+  <Card title="Package Manager Support" icon="box">
+    Works with npm, yarn, pnpm, and bun - no configuration needed
+  </Card>
+  
+  <Card title="Static Export Handling" icon="file-export">
+    Next.js projects are automatically configured for static export
+  </Card>
+  
+  <Card title="Password Protection" icon="lock">
+    Protect your previews with passwords (Pro tier)
+  </Card>
+  
+  <Card title="Ephemeral URLs" icon="clock">
+    Links expire automatically (6 hours to 7 days depending on tier)
+  </Card>
+  
+  <Card title="Deployment Management" icon="list">
+    List and delete your active deployments
+  </Card>
+</CardGroup>
+
+## Use Cases
+
+### Quick Client Previews
+
+Show clients work in progress without deploying to production or creating a staging branch:
+
+```bash
+sher link --ttl 48
+```
+
+Send the link, get feedback, iterate.
+
+### Testing on Real Devices
+
+Quickly test your local build on mobile devices without ngrok or network configuration:
+
+```bash
+sher link --no-build
+```
+
+Open the URL on your phone and test immediately.
+
+### AI Coding Agents
+
+Sher is designed to work with AI agents that need to deploy what they build. Install the [agent skill](https://sher.sh/blog/agents):
+
+```bash
+px skills add sherdotsh/sher
+```
+
+Agents can use `sher link` to deploy their work and return a live URL.
+
+### Team Collaboration
+
+Share prototypes and experiments with teammates without cluttering your Git history:
+
+```bash
+sher link --pass
+```
+
+The link is password-protected and expires automatically.
+
+## How It Works
+
+<Steps>
+  <Step title="Build Detection">
+    Sher detects your framework (Vite, Next.js, Astro, etc.) and package manager (npm, yarn, pnpm, bun) automatically.
+  </Step>
+  
+  <Step title="Build Execution">
+    Runs your build script (typically `npm run build`) to generate static output.
+  </Step>
+  
+  <Step title="File Collection">
+    Collects all files from your output directory (`dist/`, `build/`, or `out/`).
+  </Step>
+  
+  <Step title="Upload & Deploy">
+    Uploads files to Cloudflare R2 and returns a public URL hosted on Cloudflare Workers.
+  </Step>
+</Steps>
+
+<Note>
+Sher runs entirely on Cloudflare infrastructure (Workers + R2) and can be [self-hosted](https://github.com/sherdotsh/sher#self-hosting) if needed.
+</Note>
+
+## Pricing Tiers
+
+Sher offers three tiers to fit different use cases:
+
+| Feature | Free | Starter | Pro |
+|---------|------|---------|-----|
+| **Price** | $0 | $0 (GitHub login) | $8/mo |
+| **Links per day** | 1 | 25 | 200 |
+| **Max TTL** | 6 hours | 24 hours | 7 days |
+| **Max upload size** | 10 MB | 50 MB | 100 MB |
+| **Password protection** | - | - | ✓ |
+| **List & delete links** | - | ✓ | ✓ |
+
+<Tip>
+Run `sher login` to authenticate with GitHub and unlock the Starter tier (free). Run `sher upgrade` to subscribe to Pro.
+</Tip>
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Installation" icon="download" href="/installation">
+    Install Sher globally with npm, yarn, pnpm, or bun
+  </Card>
+  
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Deploy your first project in under 60 seconds
+  </Card>
+</CardGroup>

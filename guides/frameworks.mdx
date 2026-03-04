@@ -1,0 +1,195 @@
+---
+title: Framework Support
+description: How Sher detects and builds your frontend projects
+---
+
+Sher automatically detects your project's framework and runs the appropriate build command. No configuration required.
+
+## Supported Frameworks
+
+Sher supports the following frameworks out of the box:
+
+<CardGroup cols={2}>
+  <Card title="Vite" icon="bolt">
+    React, Vue, Svelte, and other Vite-based projects
+  </Card>
+  <Card title="Next.js" icon="react">
+    Automatically configured for static export
+  </Card>
+  <Card title="Astro" icon="rocket">
+    Static site generation
+  </Card>
+  <Card title="Create React App" icon="react">
+    Legacy React projects
+  </Card>
+</CardGroup>
+
+## How Framework Detection Works
+
+Sher detects your framework by checking for specific configuration files in your project root:
+
+### Vite
+
+Checks for any of these files:
+- `vite.config.ts`
+- `vite.config.js`
+- `vite.config.mjs`
+
+**Output directory:** `dist/`
+
+### Next.js
+
+Checks for any of these files:
+- `next.config.ts`
+- `next.config.js`
+- `next.config.mjs`
+
+**Output directory:** `out/`
+
+<Info>
+  Sher automatically configures Next.js for static export by injecting `output: "export"` into your config file during the build. The original config is restored after the build completes.
+</Info>
+
+### Astro
+
+Checks for any of these files:
+- `astro.config.mjs`
+- `astro.config.ts`
+
+**Output directory:** `dist/`
+
+### Create React App
+
+Checks for `react-scripts` in your `package.json` dependencies or devDependencies.
+
+**Output directory:** `build/`
+
+### Static Projects
+
+If no framework is detected, Sher looks for pre-built directories in this order:
+1. `dist/`
+2. `build/`
+3. `out/`
+
+If a directory is found, Sher assumes it contains static files ready to deploy.
+
+### Fallback Detection
+
+As a last resort, Sher checks if your `package.json` has a `build` script and assumes the output will be in `dist/`.
+
+## Next.js Static Export
+
+Next.js projects require special configuration for static export. Sher handles this automatically:
+
+### Automatic Configuration
+
+When building a Next.js project, Sher:
+
+1. **Injects static export configuration** into your `next.config` file:
+   ```js
+   output: "export",
+   images: { unoptimized: true }
+   ```
+
+2. **Patches metadata files** with `export const dynamic = "force-static"`
+
+The following files are automatically patched if found in your `app/` directory:
+- `sitemap.ts`
+- `robots.ts`
+- `manifest.ts`
+- `opengraph-image.tsx`
+- `twitter-image.tsx`
+- `icon.tsx`
+
+3. **Restores original files** after the build completes
+
+### Example Output
+
+```bash
+$ sher link
+
+  sher — share your work
+
+  framework  Next.js
+  config     injected output: "export"
+  config     patched sitemap.ts, robots.ts with force-static
+  building   npm run build
+```
+
+<Warning>
+  Next.js features that require a server runtime (like API routes, server actions, or dynamic rendering) are not supported. Only static exports work with Sher.
+</Warning>
+
+## Package Manager Detection
+
+Sher automatically detects which package manager to use by checking for lock files:
+
+| Lock File | Package Manager |
+|-----------|----------------|
+| `bun.lockb` or `bun.lock` | Bun |
+| `pnpm-lock.yaml` | pnpm |
+| `yarn.lock` | Yarn |
+| (none) | npm |
+
+The detected package manager is used to run the build command (`npm run build`, `yarn build`, etc.).
+
+## Unsupported Frameworks
+
+If your framework isn't detected automatically, you have two options:
+
+### 1. Use the `--dir` flag
+
+Skip detection and specify the output directory directly:
+
+```bash
+sher link --dir ./public
+```
+
+### 2. Use `--no-build` with a pre-built directory
+
+Build your project manually, then share the output:
+
+```bash
+npm run build
+sher link --no-build --dir ./output
+```
+
+<Tip>
+  If your project has a `build` script in `package.json` and outputs to a standard directory (`dist/`, `build/`, or `out/`), Sher will likely work without any flags.
+</Tip>
+
+## Best Practices
+
+<AccordionGroup>
+  <Accordion title="Ensure your build script is configured">
+    Sher runs `npm run build` (or equivalent) to build your project. Make sure this script is defined in your `package.json`:
+
+    ```json
+    {
+      "scripts": {
+        "build": "vite build"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="Keep your output directory clean">
+    Sher uploads everything in your output directory. Remove unnecessary files to reduce upload size:
+
+    ```bash
+    # Add to .gitignore
+    dist/
+    build/
+    out/
+    ```
+  </Accordion>
+
+  <Accordion title="Test your build locally first">
+    Before sharing, verify your build works locally:
+
+    ```bash
+    npm run build
+    npx serve dist
+    ```
+  </Accordion>
+</AccordionGroup>

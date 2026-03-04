@@ -1,80 +1,266 @@
 ---
 title: "Quickstart"
-description: "Start building awesome documentation in minutes"
+description: "Deploy your first preview in under 60 seconds"
 ---
 
-## Get started in three steps
+This guide walks you through deploying your first project with Sher.
 
-Get your documentation site running locally and make your first customization.
+## Prerequisites
 
-### Step 1: Set up your local environment
+Make sure you have Sher installed. If not, see the [installation guide](/installation).
 
-<AccordionGroup>
-  <Accordion icon="copy" title="Clone your docs locally">
-    During the onboarding process, you created a GitHub repository with your docs content if you didn't already have one. You can find a link to this repository in your [dashboard](https://dashboard.mintlify.com).
-    
-    To clone the repository locally so that you can make and preview changes to your docs, follow the [Cloning a repository](https://docs.github.com/en/repositories/creating-and-managing-repositories/cloning-a-repository) guide in the GitHub docs.
-  </Accordion>
-  <Accordion icon="rectangle-terminal" title="Start the preview server">
-    1. Install the Mintlify CLI: `npm i -g mint`
-    2. Navigate to your docs directory and run: `mint dev`
-    3. Open `http://localhost:3000` to see your docs live!
-    
-    <Tip>Your preview updates automatically as you edit files.</Tip>
-  </Accordion>
-</AccordionGroup>
+```bash
+sher --version
+```
 
-### Step 2: Deploy your changes
+## Deploy Your First Project
 
-<AccordionGroup>
-  <Accordion icon="github" title="Install our GitHub app">
-    Install the Mintlify GitHub app from your [dashboard](https://dashboard.mintlify.com/settings/organization/github-app).
-    
-    Our GitHub app automatically deploys your changes to your docs site, so you don't need to manage deployments yourself.
-</Accordion>
-<Accordion icon="palette" title="Update your site name and colors">
-    For a first change, let's update the name and colors of your docs site.
+<Steps>
+  <Step title="Navigate to your project">
+    Open your terminal and navigate to any frontend project directory:
 
-    1. Open `docs.json` in your editor.
-    2. Change the `"name"` field to your project name.
-    3. Update the `"colors"` to match your brand.
-    4. Save and see your changes instantly at `http://localhost:3000`.
+    ```bash
+    cd ~/projects/my-vite-app
+    ```
 
-    <Tip>Try changing the primary color to see an immediate difference!</Tip>
-  </Accordion>
-</AccordionGroup>
+    Sher works with Vite, Next.js, Astro, Create React App, and any project that produces static output.
+  </Step>
 
-### Step 3: Go live
+  <Step title="Run sher link">
+    Run the deploy command:
 
-<Accordion icon="rocket" title="Publish your docs">
-  1. Commit and push your changes.
-  2. Your docs will update and be live in moments!
-</Accordion>
+    ```bash
+    sher link
+    ```
 
-## Next steps
+    Sher will automatically:
+    - Detect your framework (e.g., Vite, Next.js)
+    - Detect your package manager (npm, yarn, pnpm, bun)
+    - Run your build script (`npm run build`)
+    - Collect and upload your build output
+    - Return a shareable URL
+  </Step>
 
-Now that you have your docs running, explore these key features:
+  <Step title="View your preview">
+    You'll see output like this:
 
-<CardGroup cols={2}>
+    ```bash
+    sher — share your work
 
-<Card title="Write Content" icon="pen-to-square" href="/essentials/markdown">
-  Learn MDX syntax and start writing your documentation.
-</Card>
+    framework  Vite
+    building   npm run build
 
-<Card title="Customize style" icon="palette" href="/essentials/settings">
-  Make your docs match your brand perfectly.
-</Card>
+    files      12 files (194KB)
+    uploading  ⠋
 
-<Card title="Add code examples" icon="square-code" href="/essentials/code">
-  Include syntax-highlighted code blocks.
-</Card>
+    https://a8xk2m1p.sher.sh  (copied)
+    expires 2/19/2026, 11:00 AM
+    ```
 
-<Card title="API documentation" icon="code" href="/api-reference/introduction">
-  Auto-generate API docs from OpenAPI specs.
-</Card>
+    The URL is automatically copied to your clipboard. Open it in your browser or share it with others.
+  </Step>
+</Steps>
 
-</CardGroup>
+<Tip>
+Your preview URL expires after 24 hours by default. Run `sher login` to unlock higher limits and longer expiration times (up to 7 days with Pro).
+</Tip>
+
+## Understanding the Output
+
+When you run `sher link`, you'll see:
+
+- **framework** - Auto-detected framework (Vite, Next.js, Astro, etc.)
+- **building** - The build command that's running (e.g., `npm run build`)
+- **files** - Number of files and total size uploaded
+- **URL** - Your shareable preview URL (copied to clipboard)
+- **expires** - When the link will stop working
 
 <Note>
-  **Need help?** See our [full documentation](https://mintlify.com/docs) or join our [community](https://mintlify.com/community).
+If you're not logged in, you'll see a tip recommending `sher login` for longer links and higher rate limits.
 </Note>
+
+## Authenticate for Higher Limits
+
+Without authentication, you're limited to 1 link per day with a 6-hour expiration. To unlock the Starter tier (free):
+
+```bash
+sher login
+```
+
+This opens GitHub authentication in your browser. After logging in:
+
+- **25 links per day** (up from 1)
+- **24-hour expiration** (up from 6 hours)
+- **50 MB max upload size** (up from 10 MB)
+- Ability to list and delete deployments
+
+<Tip>
+Run `sher whoami` to check your current tier and login status.
+</Tip>
+
+## Common Options
+
+### Skip the Build Step
+
+If your project is already built, skip the build step:
+
+```bash
+sher link --no-build
+```
+
+This uploads your existing `dist/` or `build/` directory without rebuilding.
+
+### Share a Specific Directory
+
+Upload a specific directory instead of auto-detecting the output folder:
+
+```bash
+sher link --dir ./my-build
+```
+
+### Set Link Expiration
+
+Control how long your link stays active (in hours):
+
+```bash
+sher link --ttl 4
+```
+
+This creates a link that expires in 4 hours. Maximum TTL depends on your tier:
+
+- **Free**: 6 hours
+- **Starter**: 24 hours
+- **Pro**: 168 hours (7 days)
+
+### Password Protection (Pro)
+
+Protect your preview with a password:
+
+```bash
+sher link --pass
+```
+
+This generates a random password and prints it in the output:
+
+```bash
+https://xyz123.sher.sh  (copied)
+password   a4c8e2f1
+expires 2/19/2026, 11:00 AM
+```
+
+Or set a specific password:
+
+```bash
+sher link --pass mysecret
+```
+
+<Warning>
+Password protection requires the Pro tier ($8/mo). Run `sher upgrade` to subscribe.
+</Warning>
+
+## Managing Deployments
+
+### List Active Deployments
+
+See all your active preview links:
+
+```bash
+sher list
+```
+
+Output:
+
+```bash
+sher — your deployments
+
+https://a8xk2m1p.sher.sh  18h 45m left
+https://xyz123.sher.sh  3h 12m left  🔒
+```
+
+<Note>
+The 🔒 icon indicates password-protected links.
+</Note>
+
+### Delete a Deployment
+
+Remove a deployment before it expires:
+
+```bash
+sher delete a8xk2m1p
+```
+
+You can extract the deployment ID from the URL (e.g., `a8xk2m1p` from `https://a8xk2m1p.sher.sh`).
+
+## Example Workflow
+
+Here's a typical workflow for sharing work in progress:
+
+<Steps>
+  <Step title="Make changes to your project">
+    Edit your code, add features, fix bugs.
+  </Step>
+
+  <Step title="Deploy for feedback">
+    ```bash
+    sher link --ttl 48
+    ```
+
+    Creates a link that expires in 48 hours.
+  </Step>
+
+  <Step title="Share the URL">
+    Send the URL to your client, teammate, or test on your phone.
+  </Step>
+
+  <Step title="Iterate and redeploy">
+    Make more changes, run `sher link` again to create a new preview.
+  </Step>
+</Steps>
+
+<Tip>
+Each time you run `sher link`, a new deployment is created with a unique URL. Old URLs remain active until they expire.
+</Tip>
+
+## Troubleshooting
+
+### "Rate limit reached"
+
+You've hit your daily deployment limit. Run `sher login` to increase it to 25/day, or `sher upgrade` for 200/day.
+
+### "Build output is too large"
+
+Your build exceeds the size limit for your tier:
+
+- **Free**: 10 MB
+- **Starter**: 50 MB
+- **Pro**: 100 MB
+
+Run `sher upgrade` to increase your limit, or optimize your build output (remove source maps, compress assets).
+
+### "Command not found: sher"
+
+Sher is not installed or not in your PATH. Reinstall with:
+
+```bash
+npm install -g shersh
+```
+
+## Next Steps
+
+<CardGroup cols={2}>
+  <Card title="Commands Reference" icon="terminal" href="/commands/link">
+    Explore all available commands and options
+  </Card>
+  
+  <Card title="Configuration" icon="gear" href="/guides/options">
+    Learn how to customize Sher for your project
+  </Card>
+  
+  <Card title="Self-Hosting" icon="server" href="/guides/self-hosting">
+    Deploy your own Sher instance on Cloudflare
+  </Card>
+  
+  <Card title="GitHub" icon="github" href="https://github.com/sherdotsh/sher">
+    View the source code and contribute
+  </Card>
+</CardGroup>

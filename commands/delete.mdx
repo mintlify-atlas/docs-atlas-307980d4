@@ -1,0 +1,151 @@
+---
+title: 'sher delete'
+description: 'Delete a specific deployment before it expires'
+---
+
+The `delete` command removes a deployment immediately, rather than waiting for it to expire naturally.
+
+<Note>
+  This command requires authentication. Run `sher login` first.
+</Note>
+
+## Usage
+
+```bash
+sher delete <id>
+```
+
+Alias:
+
+```bash
+sher rm <id>
+```
+
+## Arguments
+
+<ParamField path="id" type="string" required>
+  The deployment ID to delete. This is the subdomain part of your sher.sh URL.
+  
+  For example, if your deployment URL is `https://abc123.sher.sh`, the ID is `abc123`.
+</ParamField>
+
+## Examples
+
+### Delete by ID
+
+```bash
+sher delete abc123
+```
+
+```
+  Deleted abc123
+```
+
+### Get ID from list command
+
+First, list your deployments to find the ID:
+
+```bash
+sher list
+```
+
+```
+  sher — your deployments
+
+  https://abc123.sher.sh  22h 15m left
+  https://def456.sher.sh  5h 42m left  🔒
+```
+
+Then delete a specific deployment:
+
+```bash
+sher delete def456
+```
+
+```
+  Deleted def456
+```
+
+## Error Handling
+
+### Missing deployment ID
+
+If you don't provide a deployment ID:
+
+```bash
+sher delete
+```
+
+```
+  Usage: sher delete <id>
+```
+
+### Not logged in
+
+If you're not authenticated:
+
+```bash
+sher delete abc123
+```
+
+```
+  Login required. Run `sher login` first.
+```
+
+### Deployment not found
+
+If the deployment doesn't exist or doesn't belong to you:
+
+```bash
+sher delete xyz999
+```
+
+```
+  Delete failed (404)
+```
+
+or
+
+```
+  Deployment not found
+```
+
+<Warning>
+  Deleting a deployment is permanent and cannot be undone. The link will immediately stop working.
+</Warning>
+
+## Use Cases
+
+### Remove outdated previews
+
+Delete old deployments that are no longer needed:
+
+```bash
+sher list
+sher delete abc123
+```
+
+### Quickly iterate
+
+Delete and recreate a deployment when testing:
+
+```bash
+sher delete abc123
+sher link
+```
+
+### Manage rate limits
+
+Free up deployment slots if you've hit the rate limit and need to create new links:
+
+```bash
+sher list
+sher delete old-deployment-id
+sher link
+```
+
+## Related Commands
+
+- [`sher list`](/commands/list) - View all your active deployments
+- [`sher login`](/commands/login) - Authenticate with GitHub
+- [`sher link`](/commands/link) - Create a new deployment

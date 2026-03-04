@@ -1,0 +1,136 @@
+---
+title: 'sher login'
+description: 'Authenticate with GitHub to unlock higher limits'
+---
+
+The `login` command authenticates you via GitHub, unlocking higher rate limits and additional features.
+
+## Usage
+
+```bash
+sher login
+```
+
+## What Happens
+
+When you run `sher login`:
+
+1. A local server starts on a random port
+2. Your browser opens to GitHub OAuth
+3. You authorize Sher to access your GitHub identity
+4. The server receives an authentication token
+5. Your credentials are saved to `~/.sher/auth.json`
+6. The browser shows a success message
+
+## Example Flow
+
+```bash
+sher login
+```
+
+```
+  sher — login with GitHub
+
+  Opening browser...
+
+  Logged in as octocat
+```
+
+Your browser will show:
+
+```
+Logged in!
+You can close this window.
+```
+
+## Benefits of Logging In
+
+Logging in upgrades you from **Anonymous** to **Starter (Free)** tier:
+
+| Feature | Anonymous | Starter (Free) |
+|---------|-----------|----------------|
+| Links per day | 5 | 25 |
+| Max upload size | 50MB | 50MB |
+| Max TTL | 24 hours | 24 hours |
+| List deployments | ❌ | ✅ |
+| Delete deployments | ❌ | ✅ |
+| Password protection | ❌ | ❌ |
+
+<Tip>
+  Want even higher limits? Run `sher upgrade` for Pro ($8/mo) with 200 links/day, 100MB uploads, 7-day TTL, and password protection.
+</Tip>
+
+## Already Logged In
+
+If you're already logged in:
+
+```bash
+sher login
+```
+
+```
+  Already logged in as octocat. Run `sher logout` first to switch accounts.
+```
+
+## Browser Not Opening?
+
+If the browser doesn't open automatically:
+
+```bash
+sher login
+```
+
+```
+  sher — login with GitHub
+
+  Open this URL in your browser:
+
+  https://sher.sh/auth/github?state=uuid&port=12345
+```
+
+Manually copy and paste the URL into your browser.
+
+## Authentication Flow Details
+
+1. **Local server**: Sher starts a temporary HTTP server on `localhost` to receive the OAuth callback
+2. **GitHub OAuth**: You're redirected to GitHub to authorize Sher
+3. **Token exchange**: GitHub sends an auth token to the local server
+4. **Token verification**: Sher verifies the token with the API server
+5. **Storage**: The token and username are saved locally
+
+<Note>
+  Your authentication token is stored in `~/.sher/auth.json`. Keep this file secure.
+</Note>
+
+## Timeout
+
+The login flow times out after 2 minutes. If you don't complete authentication within that window:
+
+```
+  Login timed out — no response within 2 minutes.
+```
+
+Simply run `sher login` again.
+
+## Security
+
+- Authentication uses GitHub OAuth
+- No passwords are stored
+- The token is used for API requests
+- Token is stored locally in `~/.sher/auth.json`
+- You can revoke access anytime via GitHub settings
+
+## Switching Accounts
+
+To switch GitHub accounts:
+
+```bash
+sher logout
+sher login
+```
+
+## Related Commands
+
+- [`sher logout`](/commands/logout) - Remove stored credentials
+- [`sher whoami`](/commands/whoami) - Check current login status
+- [`sher upgrade`](/commands/upgrade) - Upgrade to Pro

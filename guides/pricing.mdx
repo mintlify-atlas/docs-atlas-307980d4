@@ -1,0 +1,325 @@
+---
+title: Pricing & Limits
+description: Understand Sher's tiers, limits, and how to upgrade
+---
+
+Sher offers three tiers to fit different use cases, from quick anonymous shares to high-volume professional use.
+
+## Pricing Tiers
+
+<CardGroup cols={3}>
+  <Card title="Free" icon="hand-wave">
+    Quick anonymous shares with no sign-up required
+  </Card>
+  <Card title="Starter" icon="github">
+    Sign in with GitHub for higher limits
+  </Card>
+  <Card title="Pro" icon="star">
+    Professional features and maximum limits
+  </Card>
+</CardGroup>
+
+## Tier Comparison
+
+| Feature | Free | Starter | Pro |
+|---------|------|---------|-----|
+| **Price** | $0 | $0 (GitHub login) | **$8/mo** |
+| **Links per day** | 1 | 25 | 200 |
+| **Max TTL** | 6 hours | 24 hours | 7 days (168h) |
+| **Max upload size** | 10 MB | 50 MB | 100 MB |
+| **Password-protected links** | — | — | ✓ |
+| **List & delete links** | — | ✓ | ✓ |
+
+<Note>
+  All limits reset daily at midnight UTC.
+</Note>
+
+## Free Tier
+
+Perfect for quick one-off shares and testing Sher.
+
+**No account required** — just run `sher link` and get a preview URL instantly.
+
+### Limits
+
+<ResponseField name="Links per day" type="number" default="1">
+  One deployment per day
+</ResponseField>
+
+<ResponseField name="Max TTL" type="number" default="6">
+  Links expire after 6 hours
+</ResponseField>
+
+<ResponseField name="Max upload size" type="number" default="10">
+  10 MB maximum build output size
+</ResponseField>
+
+### Example
+
+```bash
+$ sher link
+
+  sher — share your work
+
+  tip       run `sher login` for longer links & higher limits
+
+  framework  Vite
+  building   npm run build
+
+  files      12 files (9.2MB)
+
+  https://a8xk2m1p.sher.sh  (copied)
+  expires 2/19/2026, 5:00 PM  # 6 hours from now
+```
+
+## Starter Tier
+
+Authenticate with GitHub to unlock higher limits.
+
+**How to upgrade:** Run `sher login` and sign in with your GitHub account.
+
+### Limits
+
+<ResponseField name="Links per day" type="number" default="25">
+  25 deployments per day
+</ResponseField>
+
+<ResponseField name="Max TTL" type="number" default="24">
+  Links last up to 24 hours
+</ResponseField>
+
+<ResponseField name="Max upload size" type="number" default="50">
+  50 MB maximum build output size
+</ResponseField>
+
+### Additional Features
+
+- **List deployments:** See all your active links with `sher list`
+- **Delete deployments:** Remove links early with `sher delete <id>`
+- **Account management:** Check your status with `sher whoami`
+
+### Example
+
+```bash
+$ sher login
+
+  sher — login with GitHub
+
+  Logged in as yourusername
+
+$ sher link --ttl 24
+
+  sher — share your work
+
+  framework  Next.js
+  building   npm run build
+
+  files      45 files (42.1MB)
+
+  https://p9mk3x7n.sher.sh  (copied)
+  expires 2/20/2026, 11:00 AM  # 24 hours from now
+```
+
+## Pro Tier
+
+Professional-grade features for agencies, freelancers, and teams.
+
+**How to upgrade:** Run `sher upgrade` after logging in.
+
+**Price:** $8/month (billed monthly via [Polar](https://polar.sh))
+
+### Limits
+
+<ResponseField name="Links per day" type="number" default="200">
+  200 deployments per day
+</ResponseField>
+
+<ResponseField name="Max TTL" type="number" default="168">
+  Links last up to 7 days (168 hours)
+</ResponseField>
+
+<ResponseField name="Max upload size" type="number" default="100">
+  100 MB maximum build output size
+</ResponseField>
+
+### Pro-Only Features
+
+#### Password Protection
+
+Secure your previews with password protection:
+
+```bash
+# Random password
+sher link --pass
+
+# Custom password
+sher link --pass client-review-2024
+```
+
+Visitors will need the password to view the preview:
+
+```bash
+  https://a8xk2m1p.sher.sh  (copied)
+  password   f7a3c9e1
+  expires 2/26/2026, 11:00 AM
+```
+
+#### Extended TTL
+
+Keep previews live for up to 7 days:
+
+```bash
+sher link --ttl 168
+```
+
+### Example
+
+```bash
+$ sher upgrade
+
+  sher — upgrade to Pro
+
+  Creating checkout session...
+
+  Opening Polar checkout in your browser...
+  If it didn't open, visit:
+
+  https://polar.sh/checkout/...
+
+# After completing payment:
+
+$ sher whoami
+
+  Logged in as yourusername
+  tier       Pro
+
+$ sher link --ttl 168 --pass
+
+  sher — share your work
+
+  framework  Astro
+  building   npm run build
+
+  files      78 files (89.3MB)
+
+  https://z2nk8q4r.sher.sh  (copied)
+  password   a9f2d5b8
+  expires 2/26/2026, 11:00 AM  # 7 days from now
+```
+
+## How to Upgrade
+
+### From Free to Starter
+
+Authenticate with GitHub:
+
+```bash
+sher login
+```
+
+This opens your browser to authorize Sher with GitHub. Once complete, you'll have Starter tier access.
+
+### From Starter to Pro
+
+Upgrade to Pro via Polar:
+
+```bash
+sher upgrade
+```
+
+This opens a Polar checkout session in your browser. Complete the payment to activate Pro features.
+
+<Tip>
+  You can manage your Pro subscription (update payment method, cancel, etc.) from your Polar dashboard.
+</Tip>
+
+## Rate Limit Behavior
+
+Sher checks rate limits **before building** to save you time:
+
+```bash
+$ sher link
+
+Rate limit reached (1/day). Run `sher login` for up to 25/day.
+```
+
+This preflight check happens in `src/index.ts:110-127`:
+
+```ts
+// Pre-flight rate limit check (before building)
+try {
+  const preflight = await checkPreflight();
+  if (!preflight.allowed) {
+    const upgradeHint =
+      preflight.tier === "anon"
+        ? `Run \`sher login\` for up to 25/day.`
+        : preflight.tier === "auth"
+          ? `Run \`sher upgrade\` for up to 200/day.`
+          : "";
+    console.error(
+      `Rate limit reached (${preflight.limit}/day). ${upgradeHint}`
+    );
+    process.exit(1);
+  }
+} catch {
+  // Preflight failed (offline, etc.) — continue and let upload handle it
+}
+```
+
+### Upgrade Suggestions
+
+When you hit a rate limit, Sher suggests the next tier:
+
+- **Free tier:** "Run `sher login` for up to 25/day."
+- **Starter tier:** "Run `sher upgrade` for up to 200/day."
+- **Pro tier:** (no upgrade available — wait for reset)
+
+## Checking Your Status
+
+View your current tier and limits:
+
+```bash
+sher whoami
+```
+
+**Output examples:**
+
+<CodeGroup>
+```bash Not logged in
+$ sher whoami
+
+  Not logged in. Run `sher login` to authenticate.
+```
+
+```bash Starter tier
+$ sher whoami
+
+  Logged in as yourusername
+  tier       Starter (free)
+  tip        run `sher upgrade` for Pro ($8/mo)
+```
+
+```bash Pro tier
+$ sher whoami
+
+  Logged in as yourusername
+  tier       Pro
+```
+</CodeGroup>
+
+## Related Commands
+
+<CardGroup cols={2}>
+  <Card title="login" href="/commands/login" icon="right-to-bracket">
+    Authenticate with GitHub
+  </Card>
+  <Card title="upgrade" href="/commands/upgrade" icon="arrow-up">
+    Upgrade to Pro
+  </Card>
+  <Card title="whoami" href="/commands/whoami" icon="user">
+    Check your account status
+  </Card>
+  <Card title="list" href="/commands/list" icon="list">
+    View active deployments
+  </Card>
+</CardGroup>
