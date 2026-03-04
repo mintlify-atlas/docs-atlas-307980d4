@@ -1,0 +1,70 @@
+{
+  "projectType": "cli-tool",
+  "projectName": "Sher",
+  "projectDescription": "Share frontend project previews via ephemeral URLs with a simple CLI command",
+  "theme": "palm",
+  "primaryColor": "#848484",
+  "lightColor": "#0c0c0c",
+  "darkColor": "#f5f5f5",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "installation",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Commands",
+        "pages": [
+          "commands/link",
+          "commands/list",
+          "commands/delete",
+          "commands/login",
+          "commands/logout",
+          "commands/whoami",
+          "commands/upgrade"
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
+          "guides/frameworks",
+          "guides/options",
+          "guides/pricing",
+          "guides/self-hosting"
+        ]
+      },
+      {
+        "group": "AI Agents",
+        "pages": [
+          "agents/overview",
+          "agents/installation"
+        ]
+      }
+    ]
+  },
+  "keyFeatures": [
+    "Instant preview URLs for frontend projects without Git commits",
+    "Auto-detects frameworks (Vite, Next.js, Astro, CRA) and package managers",
+    "Password-protected links with Pro tier",
+    "Self-hostable on Cloudflare Workers + R2",
+    "GitHub authentication with tiered pricing (Free, Starter, Pro)",
+    "AI agent integration for automated deployments"
+  ],
+  "publicApiSurface": [
+    "sher link - Build and share project",
+    "sher link --no-build - Skip build step",
+    "sher link --dir <path> - Share specific directory",
+    "sher link --ttl <hours> - Set link expiry",
+    "sher link --pass [password] - Password-protect link",
+    "sher list - Show active deployments",
+    "sher delete <id> - Delete deployment",
+    "sher login - Authenticate with GitHub",
+    "sher logout - Remove credentials",
+    "sher whoami - Show login status",
+    "sher upgrade - Upgrade to Pro tier"
+  ]
+}
