@@ -17,7 +17,7 @@ When you run `sher logout`:
 
 1. Your auth token is removed from `~/.sher/auth.json`
 2. You're logged out locally
-3. Future `sher link` commands will run as anonymous (5 links/day limit)
+3. Future `sher link` commands will run as anonymous (1 link/day limit)
 4. You can no longer use `sher list` or `sher delete`
 
 <Note>
@@ -62,9 +62,9 @@ After logging out, you'll be downgraded to **Anonymous** tier:
 
 | Feature | Anonymous | Starter (Free) |
 |---------|-----------|----------------|
-| Links per day | 5 | 25 |
-| Max upload size | 50MB | 50MB |
-| Max TTL | 24 hours | 24 hours |
+| Links per day | 1 | 25 |
+| Max upload size | 10MB | 50MB |
+| Max TTL | 6 hours | 24 hours |
 | List deployments | ❌ | ✅ |
 | Delete deployments | ❌ | ✅ |
 
